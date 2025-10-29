@@ -2,14 +2,15 @@
 title: "FigureYa198SignatureCombinationV2"
 params:
   author: "Xiaofan Lu"
+  reviewers: Ying Ge,Hui Huang
 output: html_document
-reviewers: Ying Ge,Hui Huang
 ---
 
 **Author(s)**: `r params$author`  
+**Reviewer(s)**: `r params$reviewers`  
 **Date**: `r Sys.Date()`  
 
-# Academic Citation
+## Academic Citation
 If you use this code in your work or research, we kindly request that you cite our publication:
 
 Xiaofan Lu, et al. (2025). FigureYa: A Standardized Visualization Framework for Enhancing Biomedical Data Interpretation and Research Efficiency. iMetaMed. https://doi.org/10.1002/imm3.70005
@@ -18,24 +19,31 @@ Xiaofan Lu, et al. (2025). FigureYa: A Standardized Visualization Framework for 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 需求描述
+## 需求描述
+## Requirement Description
 
 我想实现下文章figure 1c的计算方法，FigureYa182RFSurv挑出了importance 比较大的基因，后续常规用muticox等方法再缩减基因。这篇文章写的是用1023中组合按KM的 logRank pvalue和基因数目挑选模型，不一样的风格。
 
-# Requirement Description
 I would like to crowdsource the calculation method for Figure 1c in the article. FigureYa182RFSurv selected genes with relatively high importance, followed by conventional methods like multicox to further reduce the number of genes. However, this paper describes a different approach—selecting the model from 1,023 combinations based on the log-rank p-value of the Kaplan-Meier (KM) analysis and the number of genes, which is a distinct style.
 
 ![](example.png)
 
 出自<https://onlinelibrary.wiley.com/doi/abs/10.1002/jcp.28600>
-from<https://onlinelibrary.wiley.com/doi/abs/10.1002/jcp.28600>
+From<https://onlinelibrary.wiley.com/doi/abs/10.1002/jcp.28600>
 
 FIGURE 1 Identification of candidate genes and development of an integrated PCG‐lncRNA signature. (a) Volcano plot displayed the lncRNAs and PCGs of the univariate Cox regression analysis. (b) Random survival forest analysis screened 10 genes. (c) After Kaplan–Meier analysis of 2 ‒1 = 1,023 combinations, the top 20 signatures were sorted according to the p value of KM. And the signature included five genes that were screened out, for it had a relative big −log10 p value and a small number of genes. KM: Kaplan–Meier; lncRNA: long noncoding RNA; PCG: protein‐coding gene
 
-# 应用场景
-# Application scenarios
+## 应用场景
+## Application scenarios
 
-核心就是排列组合。
+主要应用于多个基因集或生物标志物的联合效应评估：
+
+- 多重生物标志物验证。当你有多个候选基因签名时，需要评估它们的组合效果是否优于单独使用
+- 药物敏感性预测。结合多个药物相关的基因签名，提高治疗反应预测的准确性
+- 肿瘤亚型分类优化。通过组合不同的分子特征签名，改善癌症亚型的识别精度
+- 预后模型构建。整合多个预后相关的基因集，建立更稳健的生存预测模型
+
+专门用于多基因签名的智能组合优化，核心方法是通过排列组合策略筛选最优基因组合。
 
 根据随机生存森林分析筛选变量，通过基因组合后利用log-rank检验取p值显著且基因个数较少的组合，定义为预后签名。
 
@@ -43,14 +51,13 @@ The core idea is permutation and combination.
 
 Based on the variables screened by random survival forest analysis, gene combinations are evaluated using the log-rank test, and the combination with a significant p-value and a smaller number of genes is selected as the prognostic signature.
 
-# 环境设置
-# Environment settings
+## 环境设置
+## Environment settings
 
 ```{r}
 source("install_dependencies.R")
-
-library(survival)
-library(randomForestSRC)
+library(survival)       # 生存分析包，常用于生存数据统计与分析 # Survival analysis package, commonly used for statistical analysis of survival data
+library(randomForestSRC) # 随机生存森林，用于变量筛选及建模 # Random survival forest, used for variable selection and modeling
 
 Sys.setenv(LANGUAGE = "en") #显示英文报错信息 # error messages are displayed in English
 options(stringsAsFactors = FALSE) #禁止chr转成factor # It is forbidden to convert chr into factor
@@ -69,8 +76,8 @@ display.progress = function (index, totalN, breakN=20) {
 }  
 ```
 
-# 输入文件
-# Enter the file
+## 输入文件
+## Enter the file
 
 brca.mRNA.expr.txt和brca.lncRNA.expr.txt，基因表达矩阵。
 
@@ -83,7 +90,6 @@ brca.mRNA.expr.txt and brca.lncRNA.expr.txt, gene expression matrix.
 brca.surv.txt. Clinical information.
 
 The original text had only 99 samples. We have 180 samples here.
-
 
 ![](method.PNG)
 
@@ -108,13 +114,10 @@ expr <- rbind.data.frame(mexp,lexp)
 # 去除无表达的基因，log变换，z-score
 # Removal of non-expressed genes, log transformation, z-score
 expr <- expr[rowSums(expr) > 0,]
-expr <- as.data.frame(round(t(scale(t(log2(expr + 1)))),3))
-```
+expr <- as.data.frame(round(t(scale(t(log2(expr + 1)))),3)) 
 
-# 过滤出与OS有关的基因
-# Filter out genes associated with OS
-
-```{r}
+## 过滤出与OS有关的基因
+## Filter out genes associated with OS
 cox.pcutoff <- 0.05 # cox的p阈值 # p-threshold for cox
 Coxoutput.OS <- NULL
 for (i in 1:nrow(expr)) {
@@ -147,10 +150,9 @@ head(Coxoutput.OS)
 write.csv(Coxoutput.OS,"univariate cox regression for gene filtering.csv",row.names = F,quote = F)
 ```
 
-# 随机森林进一步降维
-# Random forests are further dimensionally reduced
+## 随机森林进一步降维
+## Random forests are further dimensionally reduced
 
-```{r}
 gene.sel <- Coxoutput.OS[which(Coxoutput.OS$pvalue < cox.pcutoff),"gene"]
 tmp <- expr[gene.sel,]
 
@@ -163,12 +165,8 @@ surv.rf <- rfsrc(Surv(OS.time, OS) ~ .,
                  ntree = ntree,
                  importance = TRUE,
                  seed = 12345678)
-```
 
-# 排列组合确定最优签名
-# Permutations and combinations determine the optimal signature
-
-```{r}
+# 排列组合确定最优签名# Permutations and combinations determine the optimal signature
 num.imp <- 10
 rel.imp <- sort(surv.rf$importance, decreasing = T)
 rel.imp.sel <- rel.imp[1:num.imp] # 取出一定数量的基因 # Remove a certain number of genes
@@ -215,13 +213,10 @@ if(n.sum == 2^num.imp-1) { # 如果总和不等则报错 # If the sum is not equ
 } else (message("Wrong combination!!!"))
 ```
 
-# 开始画图
-  
-## 绘制火山图
+## 开始画图
+## Start drawing
 
-# Start drawing
-
-# Draw a volcano map
+绘制火山图 | Draw a volcano map
 
 ```{r}
 sigpoints <- Coxoutput.OS[which(Coxoutput.OS$pvalue < cox.pcutoff),]
@@ -248,8 +243,7 @@ invisible(dev.off())
 
 ![](volcano.pdf)
 
-## 重要性图
-# Importance map
+重要性图 | Importance map
 
 ```{r}
 xrange <- range(pretty(range(rel.imp.sel))) # 根据重要性区间确定x轴范围 # The x-axis range is determined according to the importance interval
@@ -276,9 +270,7 @@ invisible(dev.off())
 
 ![](variable importance.pdf)
 
-## 绘制排列组合p值
-
-# Plot permutations and combinations of p-values
+绘制排列组合p值 | Plot permutations and combinations of p-values
 
 ```{r}
 num.comb <- 20
@@ -298,7 +290,7 @@ invisible(dev.off())
 
 ![](combination barplot.pdf)
 
-# Session Info
+## Session Info
 
 ```{r}
 sessionInfo()
