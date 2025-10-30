@@ -75,6 +75,19 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
   - `cursor-update`: Update to latest version
   - `cursor-verify`: Verify setup
 
+## PWA and Mobile App Development Lessons
+
+- For CSV export in web apps, add BOM (\uFEFF) at the beginning to ensure Excel displays Chinese characters correctly
+- Use localStorage for offline data persistence in PWA apps (5-10MB typical limit)
+- Always update Service Worker cache list (sw.js) when adding new JavaScript modules
+- For mobile PWA apps, use Blob and URL.createObjectURL for file downloads (works on both iOS and Android)
+- Include precise timestamps in exported filenames to avoid conflicts (YYYYMMDD_HHMMSS format)
+- For offline-first apps, organize code into separate modules (e.g., csv-export.js) that can be cached independently
+- Test PWA features: must be served via HTTP/HTTPS, not file:// protocol
+- For button styling, use CSS gradient backgrounds for modern look, with hover and active states
+- Use viewport-fit=cover meta tag for proper display on notched devices (iPhone X+)
+- localStorage survives page refresh but cleared when browser cache is cleared - remind users to export backups
+
 ## Testing Lessons
 
 - Use pytest fixtures in conftest.py for common test data and setup
@@ -90,28 +103,43 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
 
 # Scratchpad
 
-## Current Task: Add Test Coverage for Command Line
+## Current Task: Add CSV Export to FigureYa30Plus_nomogram_app
 
-[X] Create test_cli.py with basic test structure
-[X] Add common fixtures in conftest.py
-[X] Implement tests for cursor-agent command
-[X] Implement tests for cursor-llm command
-[X] Implement tests for cursor-scrape command
-[X] Implement tests for cursor-search command
-[X] Implement tests for cursor-update command
-[X] Implement tests for cursor-verify command
-[X] Implement tests for cursor-changelog command
-[X] Add failure test cases
-[X] Update assertions to verify exact function calls
-[X] Document testing lessons learned
+任务目标：在现有的离线nomogram手机应用中添加CSV导出功能，让每次录入的信息都能导出并保存到本地。
 
-Progress:
-1. Created comprehensive test suite for all CLI commands
-2. Added common fixtures for test data and environment
-3. Improved test assertions and error cases
-4. Added testing lessons to .cursorrules
+需求分析：
+- 应用已经是PWA，支持离线使用 ✅
+- 应用已经在本地计算，不上传服务器 ✅
+- 需要添加：每次录入信息后导出到CSV文件
 
-Next steps:
-1. Run the tests to verify coverage
-2. Add any missing edge cases
-3. Consider adding integration tests if needed
+计划步骤：
+[X] 在js/app.js中添加CSV导出功能函数
+[X] 在界面中添加"导出CSV"按钮
+[X] 支持累积保存历史记录
+[X] 创建csv-export.js模块处理CSV导出逻辑
+[X] 更新CSS样式美化导出按钮
+[X] 更新Service Worker支持离线使用
+[X] 更新README文档说明新功能
+[X] 创建详细的使用指南文档
+[X] 创建本地部署指南
+[X] 创建版本更新说明
+[X] 启动本地服务器
+[X] 检查代码无linting错误
+[ ] 在手机上测试应用功能（需用户手动测试）
+
+技术实现：
+1. 使用Blob和URL.createObjectURL生成CSV文件 ✅
+2. 支持浏览器下载CSV到本地 ✅
+3. 包含时间戳和所有输入参数以及预测结果 ✅
+4. 使用localStorage保存历史记录 ✅
+5. 添加BOM支持Excel正确显示中文 ✅
+6. 支持导出当前记录和所有历史记录 ✅
+
+已完成的文件修改：
+- index.html: 添加导出按钮和历史记录显示
+- js/csv-export.js: 新建CSV导出管理模块
+- js/app.js: 集成CSV导出功能和事件绑定
+- css/style.css: 添加导出按钮样式
+- sw.js: 更新缓存列表支持离线使用
+- README.md: 更新功能说明
+- 使用指南.md: 创建详细使用文档
