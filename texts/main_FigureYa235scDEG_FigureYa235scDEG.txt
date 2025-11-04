@@ -309,7 +309,7 @@ p <- ggplot() +
 plot1 <- p + theme(panel.grid.minor = element_blank(), ##去除网格线 ## Remove grid lines
                    panel.grid.major = element_blank(),
                    axis.text.y = element_text(colour = 'black', size = 14),
-                   axis.text.x = element_text(colour = 'black', size = 14, vjust = 50), #调整x轴坐标,vjust的值按照最终结果稍加调整 # Adjust the x-axis coordinates, and the value of vjust will be slightly adjusted according to the final result
+                   axis.text.x = element_text(colour = 'black', size = 14, vjust = 46), #调整x轴坐标,vjust的值按照最终结果稍加调整 # Adjust the x-axis coordinates, and the value of vjust will be slightly adjusted according to the final result
                    panel.border = element_blank(), ## 去掉坐标轴 ## Remove the axes
                    axis.ticks.x = element_blank(), ## 去掉的坐标刻度线 ## Removed coordinate tick marks
                    axis.line.y = element_line(colour = "black")) #添加y轴坐标轴 # Add the y-axis
