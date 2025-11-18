@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1  # 只拉取最新提交，减少磁盘使用
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,8 +25,29 @@ jobs:
       - name: Install bs4
         run: pip install beautifulsoup4
 
+      - name: Clean up disk space
+        run: |
+          # 清理系统缓存和临时文件
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          # 清理 Python 缓存
+          find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+          find . -type f -name "*.pyc" -delete 2>/dev/null || true
+          # 显示可用磁盘空间
+          df -h
+
       - name: Build searchable docs
         run: python .github/scripts/generate_searchable_index_png.py
+
+      - name: Clean up after build
+        if: always()
+        run: |
+          # 清理临时文件以释放空间
+          find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+          find . -type f -name "*.pyc" -delete 2>/dev/null || true
+          # 显示最终磁盘使用情况
+          df -h
+          du -sh texts/ 2>/dev/null || echo "texts directory not found"
 
       - name: Commit and push index/search files
         run: |
