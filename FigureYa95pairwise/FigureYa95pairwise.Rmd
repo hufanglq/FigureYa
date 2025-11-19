@@ -341,9 +341,9 @@ scat.lusc[1:3,1:2]
 
 画相关性散点图，这里只简单使用baseplot画scatter plot，可换用ggplot、ggpubr。
 
-多组情况也可参考FigureYa62twoAxis，把突变和免疫浸润分别画在左右两个y轴上
+多组情况也可参考FigureYa62twoAxis，把突变和免疫浸润分别画在左右两个y轴上。
 
-如果嫌点太多，可以通过取bin来缩减点的数量。
+如果嫌点太多，可以通过取bin来缩减点的数量，可参考FigureYa73batchCorrelation。
 
 Draw correlation scatter plot, here only simply use baseplot to draw scatter plot, can be replaced with ggplot, ggpubr.
 
