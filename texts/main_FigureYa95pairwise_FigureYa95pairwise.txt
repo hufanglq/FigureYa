@@ -23,7 +23,12 @@ profiles to calculate immune cell infiltration scores; calculate sample
 similarity and plot correlation scatter plots.
 (Substance: correlation analysis of distance matrix or similarity
 matrix)
-From
+Fig. 2: Immune editing at the DNA level. a, Pairwise genomic and
+immune distances between every two tumour regions from the same tumour
+are compared (lung adenocarcinoma, P = 3.5 × 10−4 , n = 217;lung
+squamous cell carcinoma, P = 0.002, n = 186). b, c, The Shannon
+diversity index for each tumour region is show, grouped by immune
+classification. Lung adenocarcinomas (n = 159) From
 https://www.nature.com/articles/s41586-019-1032-7
 应用场景
 Application Scenarios
@@ -37,10 +42,11 @@ source("install_dependencies.R")
 library(GSVA) # 用于基因集变异分析 (Load the GSVA package for gene set variation analysis)
 library(ClassDiscovery) # 用于外部聚类分析 (Load the ClassDiscovery package for external clustering analysis)
 library(vegan) # 用于生态与二元变量的距离计算 (Load the vegan package for ecological and binary variable distance calculations)
+
 Sys.setenv(LANGUAGE = "en") # 设置环境语言为英文，以便显示英文报错信息 (Set environment language to English for English error messages)
 options(stringsAsFactors = FALSE) # 禁止字符串自动转换为因子类型，避免数据处理中的意外转换 (Disable automatic conversion of strings to factors)
-输入数据预处理
-Input data preprocessing
+输入文件
+Input files
 需要三种文件：
 easy_input_expr1.csv，easy_input_expr2.csv，TCGA的表达数据。数据下载可参考FigureYa34count2FPKMv2。
 easy_input_maf1.txt，easy_input_maf2.txt，TCGA的突变数据。数据下载可参考FigureYa18oncoplot。
