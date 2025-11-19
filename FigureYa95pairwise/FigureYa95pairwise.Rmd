@@ -34,7 +34,7 @@ Use TCGA expression profiles and somatic mutations as inputs, convert somatic mu
 ![](example.png)
 
 Fig. 2: Immune editing at the DNA level.
-a, Pairwise genomic and immune distances between every two tumour regions from the same tumour are compared (lung adenocarcinoma, P = 3.5 × 10−4 , n = 217;lung squamous cell carcinoma, P = 0.002, n = 186). b, c, The Shannon diversity index for each tumour region is show, grouped by immune classification. Lung adenocarcinomas (n = 159)
+a, Pairwise genomic and immune distances between every two tumour regions from the same tumour are compared (lung adenocarcinoma, P = 3.5 × 10−4 , n = 217;lung squamous cell carcinoma, P = 0.002, n = 186).
 From <https://www.nature.com/articles/s41586-019-1032-7>
 
 ## 应用场景
