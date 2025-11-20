@@ -220,6 +220,10 @@ links <- unique(ilinks[,c("source", "target", "Loc")]) # remove duplicated genes
 links <- links[links$target  != sourceGene,] # remove sourceGene 
 links$score <- locScoreMat[links$target, "InteractionScore"]
 
+# 删除包含 NA 的行
+# Remove rows containing NA
+links <- links[!is.na(links$score), ]
+
 # 保存到文件
 # Save to file
 write.csv(links, "easy_input.csv", quote = F, row.names = F)
