@@ -29,11 +29,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## 需求描述 Requirement Description
 
-1. 求出来的p值做一个fdr矫正得到q值；
-   The calculated p value is corrected by fdr to obtain the q value.
+- 求出来的p值做一个fdr矫正得到q值；
+- 希望把所有的group能像这张图一样合在一张图做出来，并且又不同的颜色。
 
-2. 希望把所有的group能像这张图一样合在一张图做出来，并且又不同的颜色。
-    I hope all the groups can be combined into one picture like this one, and in different colors.
+- The calculated p value is corrected by fdr to obtain the q value.
+- I hope all the groups can be combined into one picture like this one, and in different colors.
 
 ![](example.png)
 
