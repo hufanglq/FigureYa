@@ -81,7 +81,7 @@ pca <- prcomp(t(data2))
 
 ## 开始画图 Start drawing
 
-## 方法一: 调用factoextra包 Method 1: Call the factoextra package
+### 方法一: 调用factoextra包 Method 1: Call the factoextra package
 
 ```{r, fig.width=5, fig.height=5}
 p <- fviz_pca_ind(
